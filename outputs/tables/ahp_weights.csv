@@ -1,0 +1,9 @@
+criterion,weight,direction,source
+Fire hazard (FRP-weighted KDE),0.1965,cost,NASA FIRMS (VIIRS 375 m) + FRP
+Peat depth / geotechnical proxy,0.1781,cost,BBSDLP / Ministry of Agriculture
+Flood vulnerability index,0.1599,cost,BNPB InaRISK Geoservices
+Slope,0.1412,benefit after scoring,BIG DEM
+Distance to roads,0.1216,benefit,OpenStreetMap / Geofabrik
+GHI,0.1099,benefit,Global Solar Atlas v2
+Aspect,0.0573,benefit after scoring,BIG DEM
+TPI,0.0355,benefit after scoring,BIG DEM

@@ -1,0 +1,1 @@
+Place your sanitized ArcGIS Pro project file here later, then rename this placeholder.

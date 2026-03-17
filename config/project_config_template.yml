@@ -1,0 +1,11 @@
+# Template only
+project_name: degraded-peatland-agrivoltaic-suitability
+projection_epsg: 32748
+cell_size: 30
+study_area_name: South Sumatra
+analysis_mask: degraded_peat_mask
+final_suitability_classes:
+  - very_low
+  - low
+  - moderately_suitable
+  - highly_suitable

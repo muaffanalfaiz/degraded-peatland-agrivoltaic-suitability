@@ -1,0 +1,14 @@
+repo_filename,original_filename,caption
+01_ghi_map.jpg,GHI Map.jpg,Global Horizontal Irradiance criterion map
+02_peat_thickness_map.jpg,Peat Thickness.jpg,Peat thickness / geotechnical proxy map
+03_slope_map.jpg,Slope Map.jpg,Slope criterion map
+04_land_cover_map.jpg,South Sumatra Land Cover.jpg,Forest / non-forest land cover context
+05_tpi_map.jpg,TPI.jpg,Topographic Position Index map
+06_wdpa_constraints_map.jpg,WDPA.jpg,Protected-area constraints map
+07_aspect_map.jpg,Aspect Map.jpg,Aspect criterion map
+08_degraded_peat_mask.jpg,Degradated Peat.jpg,Degraded peatland mask
+09_distance_to_road_map.jpg,Distance from Road.jpg,Road accessibility map
+10_fire_risk_map.jpg,Fire Risk Map.jpg,Fire hazard map
+11_flood_vulnerability_map.jpg,Flood Vulnerability Index.jpg,Flood vulnerability index map
+12_final_suitability_map.jpg,Final Suitability Map.jpg,Final suitability map
+13_layout_detail.jpg,Layout.jpg,Layout / inset presentation figure

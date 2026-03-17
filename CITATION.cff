@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: "Degraded Peatland Agrivoltaic Suitability"
+message: "If you use this repository, please cite the project repository and later add the final journal citation after publication."
+type: software
+authors:
+  - family-names: "Wisaksono"
+    given-names: "Muaffan Alfaiz"
+    affiliation: "Lincoln University"
+repository-code: "https://github.com/USERNAME/degraded-peatland-agrivoltaic-suitability"
+abstract: "GIS–MCDA-based land suitability analysis for agrivoltaic development on degraded peatlands in South Sumatra, Indonesia."
+keywords:
+  - "GIS"
+  - "MCDA"
+  - "AHP"
+  - "agrivoltaic"
+  - "peatland"
+  - "South Sumatra"
+license: "MIT"
