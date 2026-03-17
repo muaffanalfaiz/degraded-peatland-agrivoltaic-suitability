@@ -61,23 +61,6 @@ This repository is intentionally structured in two layers:
    - sample shareable data
    - optional notebooks / validation outputs
 
-## Recommended first public upload contents
-
-Upload these first:
-- `README.md`
-- `docs/`
-- `outputs/figures/`
-- `outputs/tables/`
-- `results/`
-- `.gitignore`
-- `LICENSE`
-- `CITATION.cff`
-
-Add later:
-- `arcgis-pro/project_clean.aprx`
-- `scripts/*.py`
-- `data/metadata/*`
-
 ## Publication note
 
 The study is **accepted but not yet formally published**.  
