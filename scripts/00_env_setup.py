@@ -1,30 +1,35 @@
 """00_env_setup
 
-Purpose:
-Set workspace, projection, cell size, snap raster, extent, mask, and overwrite settings.
+Create the local analysis workspace and validate the minimum project configuration.
 
-Status:
-Template scaffold only. Update paths and logic before running.
+Run from ArcGIS Pro Python:
+    python scripts/00_env_setup.py
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 
-try:
-    import arcpy
-except ImportError:  # pragma: no cover
-    arcpy = None
+from _helpers import ensure_arcpy, ensure_file_gdb, get_workspace_paths, load_config, set_env
 
 
 def main() -> None:
-    """Entry point for the module."""
-    if arcpy is None:
-        raise ImportError("ArcPy is not available in this Python environment.")
+    ensure_arcpy()
+    config = load_config()
+    paths = get_workspace_paths(config)
+    ensure_file_gdb(paths["geodatabase"])
+    set_env(config)
 
-    # TODO: replace with your actual project paths
-    project_root = Path(__file__).resolve().parents[1]
-
-    # TODO: add ArcPy logic here
-    print(f"Scaffold ready for: {project_root}")
+    print("Environment ready")
+    print(f"Project root      : {paths['project_root']}")
+    print(f"Local workspace   : {paths['local_workspace']}")
+    print(f"Analysis geodatabase: {paths['geodatabase']}")
+    print(f"Final public TIFF : {paths['final_public_tif']}")
+    print("")
+    print("Next:")
+    print("1. Edit config/project_config.json with your local source-data paths.")
+    print("2. Run 01_prepare_study_area.py")
+    print("3. Continue step-by-step through the pipeline.")
 
 
 if __name__ == "__main__":

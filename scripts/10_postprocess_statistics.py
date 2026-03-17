@@ -1,30 +1,46 @@
 """10_postprocess_statistics
 
-Purpose:
-Compute areas by class, patch counts, and summary outputs for documentation.
+Export class-wise summary statistics from the final classified suitability raster.
 
-Status:
-Template scaffold only. Update paths and logic before running.
+Creates:
+- outputs/tables/suitability_area_stats.csv
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 
-try:
-    import arcpy
-except ImportError:  # pragma: no cover
-    arcpy = None
+from _helpers import (
+    dataset_name,
+    ensure_arcpy,
+    ensure_file_gdb,
+    get_workspace_paths,
+    load_config,
+    raster_area_table_to_csv,
+)
+import arcpy
 
 
 def main() -> None:
-    """Entry point for the module."""
-    if arcpy is None:
-        raise ImportError("ArcPy is not available in this Python environment.")
+    ensure_arcpy()
+    config = load_config()
+    paths = get_workspace_paths(config)
+    ensure_file_gdb(paths["geodatabase"])
 
-    # TODO: replace with your actual project paths
-    project_root = Path(__file__).resolve().parents[1]
+    final_class = dataset_name(paths["geodatabase"], config["outputs"]["final_class_raster"])
+    if not arcpy.Exists(final_class):
+        raise FileNotFoundError("Run 09_weighted_overlay.py first.")
 
-    # TODO: add ArcPy logic here
-    print(f"Scaffold ready for: {project_root}")
+    csv_path = paths["project_root"] / "outputs" / "tables" / "suitability_area_stats.csv"
+    raster_area_table_to_csv(
+        final_class,
+        csv_path,
+        config["class_labels"],
+        cell_size=float(config["cell_size"]),
+    )
+
+    print("Post-processing statistics complete")
+    print(f"CSV exported: {csv_path}")
 
 
 if __name__ == "__main__":

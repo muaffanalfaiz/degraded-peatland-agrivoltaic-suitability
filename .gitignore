@@ -29,6 +29,14 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Large local data
+# Large local data kept outside GitHub
 data/raw/
 data/interim/
+data/vectors/*
+data/rasters/*
+!data/README.md
+!data/rasters/
+!data/rasters/.gitkeep
+!data/rasters/final_suitability_30m.tif
+!data/metadata/
+!data/metadata/*.csv

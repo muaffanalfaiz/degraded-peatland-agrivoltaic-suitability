@@ -1,76 +1,29 @@
-# Scripts roadmap
+# Scripts
 
-This folder is a **reproducibility scaffold** for rebuilding the ArcGIS Pro workflow into ArcPy modules.
+These ArcPy scripts reconstruct the GIS–MCDA workflow used for the agrivoltaic suitability analysis.
 
-## Important note
-These scripts are templates and placeholders.  
-They are intentionally not wired to your local paths yet.
+## Main design choices
+- ArcGIS Pro / ArcPy workflow
+- 30 m grid
+- UTM Zone 48S
+- published AHP weights already embedded in `config/project_config.json`
+- only the final classified GeoTIFF is intended to be tracked publicly in GitHub
 
-## Planned script flow
+## Files
+- `00_env_setup.py` — prepare local workspace and validate config
+- `01_prepare_study_area.py` — create study area and degraded-peat analysis mask
+- `02_prepare_constraints.py` — build hard-constraint mask from protected areas
+- `03_prepare_fire_risk.py` — FRP-weighted fire kernel density and normalization
+- `04_prepare_peat_layer.py` — normalize peat-depth / geotechnical proxy
+- `05_prepare_flood_layer.py` — normalize flood-vulnerability raster
+- `06_prepare_terrain_layers.py` — derive slope, aspect, and TPI scores from DEM
+- `07_prepare_accessibility_layer.py` — derive road-distance score
+- `08_prepare_ghi_layer.py` — normalize GHI raster
+- `09_weighted_overlay.py` — weighted linear combination and final class raster
+- `10_postprocess_statistics.py` — export class statistics to CSV
+- `11_export_maps.py` — export the final classified GeoTIFF for GitHub
+- `run_pipeline.py` — convenience runner for the full pipeline
+- `_helpers.py` — shared utility functions
 
-1. `00_env_setup.py`
-   - ArcGIS environment settings
-   - projection
-   - cell size
-   - snap raster
-   - mask
-   - workspace variables
-
-2. `01_prepare_study_area.py`
-   - South Sumatra boundary
-   - peatland subset
-   - degraded peat mask
-   - analysis extent
-
-3. `02_prepare_constraints.py`
-   - WDPA and other excluded zones
-   - rasterized hard constraint mask
-
-4. `03_prepare_fire_risk.py`
-   - FIRMS / FRP preprocessing
-   - KDE surface
-   - normalized fire-risk raster
-
-5. `04_prepare_peat_layer.py`
-   - peat-depth or peat proxy preparation
-   - scoring and normalization
-
-6. `05_prepare_flood_layer.py`
-   - flood vulnerability layer prep
-   - scoring and normalization
-
-7. `06_prepare_terrain_layers.py`
-   - DEM preprocessing
-   - slope
-   - aspect
-   - TPI
-   - scoring
-
-8. `07_prepare_accessibility_layer.py`
-   - road preprocessing
-   - Euclidean distance
-   - accessibility scoring
-
-9. `08_prepare_ghi_layer.py`
-   - GHI prep
-   - scoring / normalization
-
-10. `09_weighted_overlay.py`
-    - apply weights
-    - combine layers
-    - classify output
-
-11. `10_postprocess_statistics.py`
-    - class areas
-    - patch counts
-    - summary outputs
-
-12. `11_export_maps.py`
-    - export outputs
-    - save figures and tables
-
-## Suggested next step
-Replace placeholders one module at a time, starting with:
-- `00_env_setup.py`
-- `01_prepare_study_area.py`
-- `09_weighted_overlay.py`
+## Important
+These scripts are designed to be real workflow code, but they still expect your local source data paths to be filled in inside `config/project_config.json`.

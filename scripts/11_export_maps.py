@@ -1,30 +1,38 @@
 """11_export_maps
 
-Purpose:
-Export layouts, rasters, and summary tables into the outputs folder.
+Export the final classified suitability raster to the public GeoTIFF path tracked in GitHub.
 
-Status:
-Template scaffold only. Update paths and logic before running.
+Creates:
+- data/rasters/final_suitability_30m.tif
 """
 
-from pathlib import Path
+from __future__ import annotations
 
-try:
-    import arcpy
-except ImportError:  # pragma: no cover
-    arcpy = None
+from _helpers import (
+    copy_raster_to_public_tif,
+    dataset_name,
+    ensure_arcpy,
+    ensure_file_gdb,
+    get_workspace_paths,
+    load_config,
+)
+import arcpy
 
 
 def main() -> None:
-    """Entry point for the module."""
-    if arcpy is None:
-        raise ImportError("ArcPy is not available in this Python environment.")
+    ensure_arcpy()
+    config = load_config()
+    paths = get_workspace_paths(config)
+    ensure_file_gdb(paths["geodatabase"])
 
-    # TODO: replace with your actual project paths
-    project_root = Path(__file__).resolve().parents[1]
+    final_class = dataset_name(paths["geodatabase"], config["outputs"]["final_class_raster"])
+    if not arcpy.Exists(final_class):
+        raise FileNotFoundError("Run 09_weighted_overlay.py first.")
 
-    # TODO: add ArcPy logic here
-    print(f"Scaffold ready for: {project_root}")
+    out_tif = copy_raster_to_public_tif(final_class, paths["final_public_tif"])
+
+    print("Public TIFF export complete")
+    print(f"Exported: {out_tif}")
 
 
 if __name__ == "__main__":

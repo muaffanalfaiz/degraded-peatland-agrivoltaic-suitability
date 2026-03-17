@@ -1,0 +1,54 @@
+{
+  "project_name": "degraded-peatland-agrivoltaic-suitability",
+  "study_area_name": "South Sumatra",
+  "projection_epsg": 32748,
+  "cell_size": 30,
+  "local_workspace": "scratch",
+  "final_public_tif": "data/rasters/final_suitability_30m.tif",
+  "preferred_aspect_degrees": 0,
+  "class_breaks": [0.0, 0.25, 0.5, 0.75, 1.000001],
+  "class_labels": {
+    "1": "very_unsuitable",
+    "2": "unsuitable",
+    "3": "moderately_suitable",
+    "4": "very_suitable"
+  },
+  "weights": {
+    "fire_hazard": 0.1965,
+    "peat_depth_proxy": 0.1781,
+    "flood_vulnerability": 0.1599,
+    "slope": 0.1412,
+    "distance_to_roads": 0.1216,
+    "ghi": 0.1099,
+    "aspect": 0.0573,
+    "tpi": 0.0355
+  },
+  "inputs": {
+    "study_area_boundary": "data/example_inputs/study_area_boundary.gpkg",
+    "degraded_peat_polygons": "data/example_inputs/degraded_peat_mask.gpkg",
+    "protected_areas": "data/example_inputs/protected_areas.gpkg",
+    "roads": "data/example_inputs/roads.gpkg",
+    "dem": "data/example_inputs/dem_30m.tif",
+    "ghi_raster": "data/example_inputs/ghi_30m.tif",
+    "peat_raster": "data/example_inputs/peat_proxy_30m.tif",
+    "flood_raster": "data/example_inputs/flood_vulnerability_30m.tif",
+    "hotspot_points": "data/example_inputs/hotspot_points.gpkg"
+  },
+  "fields": {
+    "hotspot_frp": "frp"
+  },
+  "outputs": {
+    "analysis_mask_raster": "analysis_mask_30m",
+    "eligible_constraint_mask": "eligible_constraint_mask_30m",
+    "fire_score": "score_fire_hazard",
+    "peat_score": "score_peat_depth",
+    "flood_score": "score_flood_vulnerability",
+    "slope_score": "score_slope",
+    "aspect_score": "score_aspect",
+    "tpi_score": "score_tpi",
+    "roads_score": "score_distance_to_roads",
+    "ghi_score": "score_ghi",
+    "continuous_suitability": "suitability_index_continuous",
+    "final_class_raster": "final_suitability_class"
+  }
+}
