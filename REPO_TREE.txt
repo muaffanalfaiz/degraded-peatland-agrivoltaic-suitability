@@ -10,10 +10,16 @@ degraded-peatland-agrivoltaic-suitability/
 │   ├── project_clean.aprx.txt
 │   └── toolbox/
 ├── config/
+│   ├── project_config.json
 │   ├── project_config_template.yml
 │   └── weights.yml
+├── dashboard/
+│   ├── README.md
+│   ├── app.jsx
+│   └── index.html
 ├── data/
 │   ├── README.md
+│   ├── example_inputs/
 │   ├── metadata/
 │   │   └── data_inventory_template.csv
 │   └── sample/
@@ -45,4 +51,6 @@ degraded-peatland-agrivoltaic-suitability/
     ├── 09_weighted_overlay.py
     ├── 10_postprocess_statistics.py
     ├── 11_export_maps.py
+    ├── _helpers.py
+    ├── run_pipeline.py
     └── README.md

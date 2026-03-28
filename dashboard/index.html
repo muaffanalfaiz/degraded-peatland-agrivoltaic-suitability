@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Degraded Peatland Agrivoltaic Suitability — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg-root: #080e0b; --bg-card: #0f1a14; --bg-card-end: #142018;
+    --bg-inset: #0a120e; --border: #1e3028; --border-dim: #152018;
+    --text: #c9d6c0; --text-bright: #e8f0e4; --text-heading: #d4e8d0;
+    --text-dim: #4a6a52; --text-dimmer: #3a5a42; --text-mid: #6a8a72; --text-label: #8aa88e;
+    --accent: #7dcea0; --accent-dark: #5daa78; --green: #2d8a4e; --green-dark: #1a5a30;
+    --tag-bg: #1a2e22; --tab-active: #1a2e22;
+    --red: #e05a3a; --amber: #d4a03a; --blue: #4a9aca;
+    --suit-vlow: #d4451a; --suit-low: #e8a735; --suit-mod: #a3c94a; --suit-high: #2d8a4e;
+    --mono: 'JetBrains Mono', monospace; --sans: 'DM Sans', 'Segoe UI', sans-serif;
+  }
+  body { background: var(--bg-root); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.5; }
+  button { font-family: inherit; cursor: pointer; }
+  img { max-width: 100%; display: block; }
+
+  .header { border-bottom: 1px solid var(--border-dim); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, #0a120e, var(--bg-root)); position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px; }
+  .header-brand { display: flex; align-items: center; gap: 12px; }
+  .header-logo { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, var(--green), var(--green-dark)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: var(--text-bright); }
+  .header-title { font-weight: 700; font-size: 14px; color: var(--text-bright); }
+  .header-sub { font-size: 10px; color: var(--text-dim); }
+  .tabs { display: flex; gap: 2px; background: #0d1610; border-radius: 8px; padding: 3px; }
+  .tab-btn { padding: 6px 16px; border-radius: 6px; border: none; font-size: 11px; font-weight: 600; text-transform: capitalize; background: transparent; color: var(--text-dim); transition: all 0.2s; }
+  .tab-btn.active { background: var(--tab-active); color: var(--accent); }
+  main { padding: 22px 24px; max-width: 1140px; margin: 0 auto; }
+  .page { display: none; flex-direction: column; gap: 22px; }
+  .page.active { display: flex; }
+  footer { border-top: 1px solid var(--border-dim); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dimmer); margin-top: 32px; flex-wrap: wrap; gap: 8px; }
+  footer .mono { font-family: var(--mono); font-size: 10px; }
+
+  .card { background: linear-gradient(135deg, var(--bg-card), var(--bg-card-end)); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .kpi-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .kpi { flex: 1 1 155px; min-width: 155px; padding: 20px 22px; }
+  .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-dim); font-weight: 600; margin-bottom: 6px; }
+  .kpi-value { font-size: 26px; font-weight: 800; line-height: 1.1; }
+  .kpi-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .col { flex: 1 1 320px; }
+
+  .sec { margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .sec-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; background: var(--tag-bg); color: var(--accent-dark); padding: 3px 10px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
+  .sec h2 { margin: 0; font-size: 17px; font-weight: 700; color: var(--text-heading); }
+  .sec-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  .funnel-item { margin-bottom: 8px; }
+  .funnel-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-mid); margin-bottom: 3px; }
+  .funnel-row .mono { font-family: var(--mono); font-size: 10px; }
+  .funnel-track { height: 5px; border-radius: 3px; background: var(--bg-inset); }
+  .funnel-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green), var(--green-dark)); }
+
+  .steps { display: flex; gap: 10px; flex-wrap: wrap; }
+  .step { flex: 1 1 150px; padding: 12px 14px; background: var(--bg-inset); border-radius: 8px; border: 1px solid var(--border-dim); }
+  .step-num { font-size: 10px; font-weight: 700; color: var(--green); font-family: var(--mono); margin-bottom: 3px; }
+  .step-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .step-desc { font-size: 10px; color: var(--text-dim); line-height: 1.5; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .legend-label { color: var(--text-label); }
+  .legend-pct { color: var(--text-dim); font-family: var(--mono); font-size: 10px; }
+
+  .peat-bar { height: 28px; border-radius: 6px; overflow: hidden; display: flex; background: var(--bg-inset); margin-bottom: 18px; }
+  .peat-bar div { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+  .peat-intact { width: 78.9%; background: linear-gradient(90deg, #1a3a2a, #1e4430); color: var(--accent-dark); }
+  .peat-degraded { width: 21.1%; background: linear-gradient(90deg, #8a6540, #c4956a); color: #1a0e05; }
+
+  .map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 6px; background: #0d1610; border-radius: 10px; padding: 8px; border: 1px solid var(--border-dim); }
+  .map-btn { padding: 10px 8px; border-radius: 6px; border: 1px solid transparent; font-size: 11px; font-weight: 600; text-align: center; background: transparent; color: var(--text-dim); transition: all 0.15s; line-height: 1.3; }
+  .map-btn.active { background: #1a3a26; color: var(--accent); border-color: #2d6a3e; }
+  .map-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .map-title { font-size: 16px; font-weight: 700; color: var(--text-heading); margin: 0; }
+  .map-desc { margin: 4px 0 0; font-size: 12px; color: var(--text-dim); }
+  .map-weight { font-size: 10px; padding: 4px 10px; border-radius: 4px; background: var(--bg-inset); border: 1px solid var(--border); color: var(--accent); font-family: var(--mono); }
+  .map-frame { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-inset); position: relative; min-height: 200px; }
+  .map-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-dimmer); font-size: 12px; }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .meta-item { background: #0c1610; border-radius: 8px; padding: 10px 14px; border: 1px solid var(--border-dim); }
+  .meta-label { font-size: 9px; color: var(--text-dimmer); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px; }
+  .meta-value { font-size: 12px; font-weight: 600; color: var(--text-label); }
+
+  .ref-table { width: 100%; border-collapse: separate; border-spacing: 0 4px; font-size: 12px; }
+  .ref-table th { text-align: left; padding: 8px 12px; color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; border-bottom: 1px solid var(--border); }
+  .ref-table td { padding: 10px 12px; }
+  .ref-table tr:nth-child(even) { background: #0c1610; }
+  .ref-table .col-name { color: var(--text); font-weight: 600; border-radius: 6px 0 0 6px; }
+  .ref-table .col-weight { color: var(--accent); font-family: var(--mono); }
+  .ref-table .col-dir, .ref-table .col-src { color: var(--text-mid); }
+  .ref-table .col-src { border-radius: 0 6px 6px 0; }
+  .ref-note { font-size: 10px; color: var(--text-dimmer); margin-top: 8px; font-style: italic; }
+
+  .chart-box { position: relative; max-width: 280px; margin: 0 auto; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .bar-label { width: 115px; font-size: 11px; color: var(--text-label); text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 20px; background: var(--bg-inset); border-radius: 0 6px 6px 0; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 0 6px 6px 0; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 600; color: var(--text-bright); font-family: var(--mono); transition: width 0.5s ease; }
+  .bar-legend { display: flex; gap: 14px; justify-content: center; margin-top: 12px; }
+  .bar-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-mid); }
+  .bar-legend-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .radar-note { padding: 8px 12px; background: var(--bg-inset); border-radius: 6px; border: 1px solid var(--border-dim); font-size: 11px; color: var(--text-dim); text-align: center; margin-top: 10px; }
+  .link-text { color: var(--accent-dark); cursor: pointer; text-decoration: underline; }
+  .note-box { margin-top: 12px; padding: 8px 12px; background: var(--bg-inset); border-radius: 6px; border: 1px solid var(--border-dim); font-size: 10px; color: var(--text-dim); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">AV</div>
+    <div>
+      <div class="header-title">Degraded Peatland Agrivoltaic Suitability</div>
+      <div class="header-sub">South Sumatra, Indonesia — GIS-MCDA Portfolio Project</div>
+    </div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="criteria">Criteria</button>
+    <button class="tab-btn" data-tab="maps">Maps</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══ OVERVIEW ═══ -->
+<div class="page active" id="page-overview">
+  <div class="kpi-row">
+    <div class="card kpi"><div class="kpi-label">Eligible Domain</div><div class="kpi-value" style="color:var(--accent)">124,008 ha</div><div class="kpi-sub">After constraint exclusion</div></div>
+    <div class="card kpi"><div class="kpi-label">Highly Suitable</div><div class="kpi-value" style="color:var(--green)">53.76%</div><div class="kpi-sub">66,665 ha identified</div></div>
+    <div class="card kpi"><div class="kpi-label">Mod + High</div><div class="kpi-value" style="color:var(--suit-mod)">78.65%</div><div class="kpi-sub">97,533 ha combined</div></div>
+    <div class="card kpi"><div class="kpi-label">AHP Consistency</div><div class="kpi-value" style="color:var(--blue)">CR 0.002</div><div class="kpi-sub">Well below 0.10</div></div>
+  </div>
+
+  <div class="row">
+    <div class="card col">
+      <div class="sec"><span class="sec-tag">Result</span><h2>Suitability Distribution</h2><div class="sec-line"></div></div>
+      <div class="chart-box"><canvas id="donutChart"></canvas></div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:var(--suit-vlow)"></span><span class="legend-label">Very Low</span><span class="legend-pct">1.67%</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--suit-low)"></span><span class="legend-label">Low</span><span class="legend-pct">19.69%</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--suit-mod)"></span><span class="legend-label">Moderate</span><span class="legend-pct">24.89%</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--suit-high)"></span><span class="legend-label">Highly Suitable</span><span class="legend-pct">53.76%</span></div>
+      </div>
+    </div>
+
+    <div class="card col">
+      <div class="sec"><span class="sec-tag">Context</span><h2>Peatland Domain</h2><div class="sec-line"></div></div>
+      <div class="funnel-row"><span>Total peatland</span><span class="mono">1,092,142 ha</span></div>
+      <div class="peat-bar"><div class="peat-intact">Intact — 78.9%</div><div class="peat-degraded">Degraded</div></div>
+      <div class="funnel-item"><div class="funnel-row"><span>Total peatland</span><span class="mono">1,092,142 ha</span></div><div class="funnel-track"><div class="funnel-fill" style="width:100%;opacity:0.35"></div></div></div>
+      <div class="funnel-item"><div class="funnel-row"><span>Degraded subset</span><span class="mono">230,810 ha</span></div><div class="funnel-track"><div class="funnel-fill" style="width:55%;opacity:0.55"></div></div></div>
+      <div class="funnel-item"><div class="funnel-row"><span>After constraints</span><span class="mono">124,008 ha</span></div><div class="funnel-track"><div class="funnel-fill" style="width:30%;opacity:0.75"></div></div></div>
+      <div class="funnel-item"><div class="funnel-row"><span>Mod + High suitable</span><span class="mono">97,533 ha</span></div><div class="funnel-track"><div class="funnel-fill" style="width:23%;opacity:0.95"></div></div></div>
+      <div class="note-box">Only degraded peatland was analyzed. The framework avoids incentivizing conversion of intact peat ecosystems.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec"><span class="sec-tag">Method</span><h2>Analytical Pipeline</h2><div class="sec-line"></div></div>
+    <div class="steps">
+      <div class="step"><div class="step-num">STEP 01</div><div class="step-title">Define Domain</div><div class="step-desc">Degraded peatland mask within South Sumatra</div></div>
+      <div class="step"><div class="step-num">STEP 02</div><div class="step-title">Apply Constraints</div><div class="step-desc">WDPA protected areas excluded</div></div>
+      <div class="step"><div class="step-num">STEP 03</div><div class="step-title">Score Criteria</div><div class="step-desc">8 layers normalized to 0–1 scale</div></div>
+      <div class="step"><div class="step-num">STEP 04</div><div class="step-title">AHP Weighting</div><div class="step-desc">Pairwise comparison (CR = 0.002)</div></div>
+      <div class="step"><div class="step-num">STEP 05</div><div class="step-title">WLC Overlay</div><div class="step-desc">Weighted suitability index</div></div>
+      <div class="step"><div class="step-num">STEP 06</div><div class="step-title">Classify</div><div class="step-desc">4 planning classes at 0.25 intervals</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec"><span class="sec-tag">Output</span><h2>Final Suitability Map</h2><div class="sec-line"></div></div>
+    <div class="map-frame"><img src="https://raw.githubusercontent.com/muaffanalfaiz/degraded-peatland-agrivoltaic-suitability/main/outputs/figures/12_final_suitability_map.jpg" alt="Final Suitability Map"></div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text-dim);text-align:center">See the <span class="link-text" onclick="switchTab('maps')">Maps tab</span> to explore all 12 thematic layers</div>
+  </div>
+</div>
+
+<!-- ═══ CRITERIA ═══ -->
+<div class="page" id="page-criteria">
+  <div class="row">
+    <div class="card" style="flex:1 1 460px">
+      <div class="sec"><span class="sec-tag">AHP</span><h2>Criterion Weights</h2><div class="sec-line"></div></div>
+      <div id="barChart"></div>
+      <div class="bar-legend">
+        <div class="bar-legend-item"><span class="bar-legend-dot" style="background:var(--red)"></span>Risk</div>
+        <div class="bar-legend-item"><span class="bar-legend-dot" style="background:var(--accent-dark)"></span>Terrain</div>
+        <div class="bar-legend-item"><span class="bar-legend-dot" style="background:var(--amber)"></span>Access</div>
+        <div class="bar-legend-item"><span class="bar-legend-dot" style="background:var(--blue)"></span>Solar</div>
+      </div>
+    </div>
+
+    <div class="card" style="flex:1 1 300px">
+      <div class="sec"><span class="sec-tag">Profile</span><h2>Weight Radar</h2><div class="sec-line"></div></div>
+      <div class="chart-box"><canvas id="radarChart"></canvas></div>
+      <div class="radar-note">Risk-first: 53.5% of weight on fire + peat + flood</div>
+    </div>
+  </div>
+
+  <div class="card" style="overflow-x:auto">
+    <div class="sec"><span class="sec-tag">Detail</span><h2>Criteria Reference</h2><div class="sec-line"></div></div>
+    <table class="ref-table">
+      <thead><tr><th>Criterion</th><th>Weight</th><th>Direction</th><th>Data Source</th></tr></thead>
+      <tbody>
+        <tr><td class="col-name">Fire Hazard (FRP-weighted KDE)</td><td class="col-weight">0.1965</td><td class="col-dir">Cost</td><td class="col-src">NASA FIRMS (VIIRS 375 m)</td></tr>
+        <tr><td class="col-name">Peat Depth / Proxy</td><td class="col-weight">0.1781</td><td class="col-dir">Cost</td><td class="col-src">BBSDLP / Ministry of Agriculture</td></tr>
+        <tr><td class="col-name">Flood Vulnerability Index</td><td class="col-weight">0.1599</td><td class="col-dir">Cost</td><td class="col-src">BNPB InaRISK Geoservices</td></tr>
+        <tr><td class="col-name">Slope</td><td class="col-weight">0.1412</td><td class="col-dir">Benefit*</td><td class="col-src">BIG DEM</td></tr>
+        <tr><td class="col-name">Distance to Roads</td><td class="col-weight">0.1216</td><td class="col-dir">Benefit</td><td class="col-src">OpenStreetMap / Geofabrik</td></tr>
+        <tr><td class="col-name">Global Horizontal Irradiance</td><td class="col-weight">0.1099</td><td class="col-dir">Benefit</td><td class="col-src">Global Solar Atlas v2</td></tr>
+        <tr><td class="col-name">Aspect</td><td class="col-weight">0.0573</td><td class="col-dir">Benefit*</td><td class="col-src">BIG DEM</td></tr>
+        <tr><td class="col-name">Topographic Position Index</td><td class="col-weight">0.0355</td><td class="col-dir">Benefit*</td><td class="col-src">BIG DEM</td></tr>
+      </tbody>
+    </table>
+    <div class="ref-note">* Benefit after scoring — normalized via distance-to-target function</div>
+  </div>
+</div>
+
+<!-- ═══ MAPS ═══ -->
+<div class="page" id="page-maps">
+  <div class="sec"><span class="sec-tag">Spatial</span><h2>Thematic Map Explorer</h2><div class="sec-line"></div></div>
+  <div class="map-grid" id="mapGrid"></div>
+  <div class="card">
+    <div class="map-header">
+      <div><h3 class="map-title" id="mapTitle"></h3><p class="map-desc" id="mapDesc"></p></div>
+      <span class="map-weight" id="mapWeight" style="display:none"></span>
+    </div>
+    <div class="map-frame" id="mapFrame">
+      <div class="map-loading" id="mapLoading">Loading map...</div>
+      <img id="mapImg" alt="" style="opacity:0;transition:opacity 0.4s ease">
+    </div>
+  </div>
+  <div class="meta-grid">
+    <div class="meta-item"><div class="meta-label">Projection</div><div class="meta-value">WGS 84 / UTM 48S</div></div>
+    <div class="meta-item"><div class="meta-label">EPSG</div><div class="meta-value">32748</div></div>
+    <div class="meta-item"><div class="meta-label">Cell Size</div><div class="meta-value">30 m</div></div>
+    <div class="meta-item"><div class="meta-label">Software</div><div class="meta-value">ArcGIS Pro</div></div>
+    <div class="meta-item"><div class="meta-label">Weighting</div><div class="meta-value">AHP + WLC</div></div>
+    <div class="meta-item"><div class="meta-label">Classes</div><div class="meta-value">4-class output</div></div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <span>Muaffan Alfaiz Wisaksono — Lincoln University</span>
+  <span class="mono">EPSG:32748 &middot; 30 m &middot; AHP-WLC &middot; MIT License</span>
+</footer>
+
+<script>
+var BASE = "https://raw.githubusercontent.com/muaffanalfaiz/degraded-peatland-agrivoltaic-suitability/main/outputs/figures";
+
+var MAP_LAYERS = [
+  { id:"final", label:"Final Suitability", desc:"Classified suitability output \u2014 4 planning classes", img:BASE+"/12_final_suitability_map.jpg" },
+  { id:"fire", label:"Fire Risk", desc:"FRP-weighted kernel density from NASA FIRMS VIIRS hotspots", img:BASE+"/10_fire_risk_map.jpg", w:0.1965 },
+  { id:"peat", label:"Peat Depth", desc:"Peat thickness / geotechnical proxy from BBSDLP", img:BASE+"/02_peat_thickness_map.jpg", w:0.1781 },
+  { id:"flood", label:"Flood Index", desc:"Flood vulnerability index from BNPB InaRISK", img:BASE+"/11_flood_vulnerability_map.jpg", w:0.1599 },
+  { id:"slope", label:"Slope", desc:"Terrain gradient derived from BIG DEM", img:BASE+"/03_slope_map.jpg", w:0.1412 },
+  { id:"roads", label:"Road Access", desc:"Euclidean distance to roads from OpenStreetMap", img:BASE+"/09_distance_to_road_map.jpg", w:0.1216 },
+  { id:"ghi", label:"Solar (GHI)", desc:"Global Horizontal Irradiance from Global Solar Atlas v2", img:BASE+"/01_ghi_map.jpg", w:0.1099 },
+  { id:"aspect", label:"Aspect", desc:"Terrain orientation derived from BIG DEM", img:BASE+"/07_aspect_map.jpg", w:0.0573 },
+  { id:"tpi", label:"TPI", desc:"Topographic Position Index derived from BIG DEM", img:BASE+"/05_tpi_map.jpg", w:0.0355 },
+  { id:"constraints", label:"Protected Areas", desc:"WDPA hard constraint exclusion zones", img:BASE+"/06_wdpa_constraints_map.jpg" },
+  { id:"peat_mask", label:"Peat Mask", desc:"Degraded peatland domain boundary", img:BASE+"/08_degraded_peat_mask.jpg" },
+  { id:"landcover", label:"Land Cover", desc:"Forest / non-forest contextual layer", img:BASE+"/04_land_cover_map.jpg" }
+];
+
+var WEIGHTS = [
+  { label:"Fire Hazard", pct:19.65, type:"Risk" },
+  { label:"Peat Depth", pct:17.81, type:"Risk" },
+  { label:"Flood Vulnerability", pct:15.99, type:"Risk" },
+  { label:"Slope", pct:14.12, type:"Terrain" },
+  { label:"Road Access", pct:12.16, type:"Access" },
+  { label:"Solar (GHI)", pct:10.99, type:"Solar" },
+  { label:"Aspect", pct:5.73, type:"Terrain" },
+  { label:"TPI", pct:3.55, type:"Terrain" }
+];
+
+var TYPE_COLORS = { Risk:"#e05a3a", Terrain:"#5daa78", Access:"#d4a03a", Solar:"#4a9aca" };
+
+// Tabs
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===id); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.toggle('active', p.id==='page-'+id); });
+}
+document.getElementById('tabs').addEventListener('click', function(e){
+  if(e.target.classList.contains('tab-btn')) switchTab(e.target.dataset.tab);
+});
+
+// Donut
+new Chart(document.getElementById('donutChart'), {
+  type:'doughnut',
+  data:{
+    labels:['Very Low','Low','Moderate','Highly Suitable'],
+    datasets:[{ data:[2065.68,24408.99,30867.84,66665.25], backgroundColor:['#d4451a','#e8a735','#a3c94a','#2d8a4e'], borderWidth:0, hoverOffset:6 }]
+  },
+  options:{
+    responsive:true, cutout:'55%',
+    plugins:{
+      legend:{display:false},
+      tooltip:{ backgroundColor:'#0d1117', borderColor:'#2a3a2a', borderWidth:1, titleColor:'#e8f0e4', bodyColor:'#c9d6c0', cornerRadius:8, padding:12,
+        callbacks:{ label:function(ctx){ var p=[1.67,19.69,24.89,53.76]; return ctx.parsed.toLocaleString()+' ha ('+p[ctx.dataIndex]+'%)'; } }
+      }
+    }
+  }
+});
+
+// Radar
+new Chart(document.getElementById('radarChart'), {
+  type:'radar',
+  data:{
+    labels:['Fire','Peat','Flood','Slope','Roads','GHI','Aspect','TPI'],
+    datasets:[{ data:[19.65,17.81,15.99,14.12,12.16,10.99,5.73,3.55], backgroundColor:'rgba(45,138,78,0.2)', borderColor:'#2d8a4e', borderWidth:2, pointBackgroundColor:'#2d8a4e', pointRadius:3 }]
+  },
+  options:{
+    responsive:true,
+    scales:{ r:{ beginAtZero:true, max:25, grid:{color:'#1e3028'}, angleLines:{color:'#1e3028'}, ticks:{display:false}, pointLabels:{color:'#6a8a72',font:{size:11}} } },
+    plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0d1117', borderColor:'#2a3a2a', borderWidth:1, titleColor:'#e8f0e4', bodyColor:'#c9d6c0', cornerRadius:8,
+      callbacks:{ label:function(ctx){ return 'Weight: '+ctx.parsed.r+'%'; } }
+    }}
+  }
+});
+
+// Horizontal bars (pure HTML)
+(function(){
+  var box=document.getElementById('barChart'), maxP=22;
+  WEIGHTS.forEach(function(w){
+    var row=document.createElement('div'); row.className='bar-row';
+    var lbl=document.createElement('div'); lbl.className='bar-label'; lbl.textContent=w.label;
+    var track=document.createElement('div'); track.className='bar-track';
+    var fill=document.createElement('div'); fill.className='bar-fill';
+    fill.style.width=(w.pct/maxP*100)+'%'; fill.style.background=TYPE_COLORS[w.type]; fill.textContent=w.pct+'%';
+    track.appendChild(fill); row.appendChild(lbl); row.appendChild(track); box.appendChild(row);
+  });
+})();
+
+// Map explorer
+(function(){
+  var grid=document.getElementById('mapGrid');
+  MAP_LAYERS.forEach(function(l){
+    var btn=document.createElement('button');
+    btn.className='map-btn'+(l.id==='final'?' active':'');
+    btn.dataset.layer=l.id; btn.textContent=l.label;
+    grid.appendChild(btn);
+  });
+  grid.addEventListener('click',function(e){
+    var btn=e.target.closest('.map-btn');
+    if(btn) selectLayer(btn.dataset.layer);
+  });
+  selectLayer('final');
+})();
+
+function selectLayer(id){
+  var layer=MAP_LAYERS.find(function(l){return l.id===id;});
+  document.querySelectorAll('.map-btn').forEach(function(b){b.classList.toggle('active',b.dataset.layer===id);});
+  document.getElementById('mapTitle').textContent=layer.label;
+  document.getElementById('mapDesc').textContent=layer.desc;
+  var badge=document.getElementById('mapWeight');
+  if(layer.w){ badge.textContent='w = '+layer.w; badge.style.display=''; } else { badge.style.display='none'; }
+  var img=document.getElementById('mapImg');
+  var loading=document.getElementById('mapLoading');
+  img.style.opacity='0'; loading.style.display='flex'; loading.textContent='Loading map...';
+  img.onload=function(){ img.style.opacity='1'; loading.style.display='none'; };
+  img.onerror=function(){ loading.textContent='Failed to load image'; };
+  img.src=layer.img; img.alt=layer.label;
+}
+</script>
+</body>
+</html>
