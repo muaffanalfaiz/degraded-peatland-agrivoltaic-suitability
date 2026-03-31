@@ -1,5 +1,0 @@
-This folder is a placeholder for example input paths referenced in config/project_config.json.
-
-The repository does not distribute the full original working inputs.
-
-Users who want to adapt the ArcPy workflow should place or reference their own local datasets here, or replace the example paths in config/project_config.json with valid local paths on their own machine.

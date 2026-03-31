@@ -1,32 +1,47 @@
-# Project summary
+# Project Summary
 
-## Title
-GIS–MCDA-Based Land Suitability Analysis for Agrivoltaic Development on Degraded Peatlands in South Sumatra
+## Overview
 
-## Short summary
-This project evaluates agrivoltaic suitability on degraded peatlands in South Sumatra using ArcGIS Pro, AHP weighting, and weighted linear combination under a hard-constraint framework. The analysis was designed as a first-pass spatial screening tool that prioritizes peatland risk and land feasibility before solar resource optimization.
+This project applies a GIS-based multi-criteria decision analysis framework
+to screen degraded peatlands in South Sumatra, Indonesia for potential
+agrivoltaic development. The analysis integrates peatland-specific risk
+factors, terrain variables, accessibility, and solar resource data to
+identify candidate zones while excluding ecologically sensitive and
+legally restricted areas.
 
-## Why this matters
-Degraded peatlands in South Sumatra are associated with recurrent fire, seasonal flooding, drainage-related instability, and land-use pressure. At the same time, the region has usable solar potential. The project asks whether degraded peatlands can be screened for agrivoltaic development without encouraging conversion of intact peatland ecosystems.
+## Motivation
 
-## Technical framing
-This is a **GIS + MCDA + peatland risk** project rather than a generic solar suitability map. The workflow integrates:
-- protected-area constraints
-- peatland masking
-- risk surfaces
-- DEM-derived terrain factors
-- infrastructure accessibility
-- solar resource
+Peatlands in South Sumatra experience recurring fire events, seasonal
+flooding, drainage-related land subsidence, and widespread degradation from
+past land conversion. The region also has meaningful solar irradiance
+potential. This project asks whether degraded peat areas can serve as
+candidate zones for agrivoltaic development — combining solar energy
+production with paludiculture — without promoting encroachment into intact
+or protected peat ecosystems.
 
-## What makes it strong for GitHub
-- applied, policy-relevant topic
-- provincial-scale GIS workflow
-- ArcGIS Pro reproducibility potential
-- multiple real outputs already available
-- suitable for GIS, environment, research, and all-rounder portfolios
+## Analytical approach
 
-## Best public positioning
-Use this project as:
-- a **featured GIS portfolio repo**
-- an **accepted-research showcase**
-- a **template for future ArcPy reconstruction**
+The workflow uses an Analytic Hierarchy Process (AHP) to derive criterion
+weights from expert-informed pairwise comparisons, followed by Weighted
+Linear Combination (WLC) to integrate eight spatially explicit criteria
+into a composite suitability index. Hard constraints (protected areas,
+intact peat, restricted land cover classes) are applied as binary
+exclusion masks before final classification.
+
+## Study area
+
+South Sumatra province, Indonesia. The analysis domain is restricted to
+the degraded peatland extent within the province.
+
+## Main output
+
+A 30 m resolution suitability raster classified into four levels, with
+the highest-suitability class covering approximately 66,665 ha of degraded
+peatland after constraint exclusions.
+
+## Intended use
+
+This is a first-pass spatial screening tool intended to support planning
+prioritisation and field validation scoping. It is not a substitute for
+site-level geotechnical assessment, hydrological modelling, land tenure
+review, or grid connection feasibility analysis.

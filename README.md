@@ -6,13 +6,13 @@ GIS–MCDA-based land suitability analysis for agrivoltaic development on degrad
 
 ## Overview
 
-This repository presents a GIS-based multi-criteria decision analysis framework for screening degraded peatlands in South Sumatra for potential agrivoltaic development. The project integrates peatland-specific risk factors, accessibility, terrain variables, and solar resource data to identify candidate zones while avoiding ecologically sensitive or restricted areas.
+This repository presents a GIS-based multi-criteria decision analysis (MCDA) framework for screening degraded peatlands in South Sumatra for potential agrivoltaic development. The project integrates peatland-specific risk factors, accessibility, terrain variables, and solar resource data to identify candidate zones while excluding ecologically sensitive and legally restricted areas.
 
 The analysis was developed in ArcGIS Pro and is accompanied by a structured ArcPy reconstruction scaffold, exported thematic maps, and an interactive project dashboard.
 
 ## Why this project matters
 
-Peatlands in South Sumatra face recurring fire risk, seasonal flooding, drainage-related instability, and land degradation. At the same time, the region has meaningful solar potential. This project explores whether degraded peatlands can be screened for agrivoltaic development without encouraging expansion into intact peat ecosystems.
+Peatlands in South Sumatra face recurring fire risk, seasonal flooding, drainage-related land subsidence, and widespread degradation from past land conversion. The region also has meaningful solar irradiance potential. This project explores whether degraded peat areas can be screened for agrivoltaic development without encouraging encroachment into intact or protected peat ecosystems.
 
 ## Core idea
 
@@ -22,14 +22,14 @@ This is a **risk-first agrivoltaic siting framework**. Rather than prioritising 
 
 Of the **230,810 ha** of degraded peatland in South Sumatra, **124,008 ha** remained after protected-area constraints were applied. Within that eligible domain:
 
-| Class | Area (ha) | Share |
+| Class | Area (ha) | Share of eligible domain |
 |---|---:|---:|
 | Highly suitable | 66,665.25 | 53.76% |
 | Moderately suitable | 30,867.84 | 24.89% |
 | Low | 24,408.99 | 19.69% |
 | Very low | 2,065.68 | 1.67% |
 
-Overall, **78.65%** of eligible degraded peatland was classified as moderately suitable or highly suitable for agrivoltaic development.
+**78.65%** of eligible degraded peatland was classified as moderately suitable or highly suitable for agrivoltaic development.
 
 ## Dashboard
 
@@ -42,14 +42,14 @@ An interactive project dashboard is available in the [`dashboard/`](dashboard/) 
 The workflow was developed in ArcGIS Pro using a GIS–MCDA approach with:
 
 - Common spatial grid: 30 m
-- Projected coordinate system: WGS 84 / UTM Zone 48S (EPSG:32748)
-- Analytic Hierarchy Process (AHP) for criterion weighting
+- Projected coordinate system: Indonesian 1974 / UTM Zone 48S (EPSG:23888)
+- Analytic Hierarchy Process (AHP) for criterion weighting (CR = 0.00244)
 - Weighted Linear Combination (WLC) for suitability integration
-- Protected areas (WDPA) and related exclusions as hard constraints
+- Protected areas (WDPA) and related land-cover exclusions as hard constraints
 
 ## Evaluation criteria
 
-Eight criteria were integrated through AHP pairwise comparison (CR = 0.00244):
+Eight criteria were integrated through AHP pairwise comparison:
 
 | Criterion | Weight | Direction | Source |
 |---|---:|---|---|
@@ -62,7 +62,7 @@ Eight criteria were integrated through AHP pairwise comparison (CR = 0.00244):
 | Aspect | 0.0573 | Benefit | BIG DEM |
 | Topographic Position Index | 0.0355 | Benefit | BIG DEM |
 
-Risk factors (fire, peat, flood) collectively account for **53.5%** of the total weight, reflecting the risk-first design philosophy.
+Risk factors (fire, peat depth, flood vulnerability) collectively account for **53.5%** of the total weight, reflecting the risk-first design philosophy.
 
 ## Study area
 
@@ -74,31 +74,38 @@ South Sumatra, Indonesia.
 
 ```
 degraded-peatland-agrivoltaic-suitability/
-├── dashboard/           ← Interactive project dashboard (open index.html)
+├── arcgis-pro/                  ArcGIS Pro project file
+│   └── agrivoltaic_suitability_clean.aprx
+├── config/                      Project configuration and AHP weights
+│   ├── project_config.json
+│   ├── project_config_template.yml
+│   └── weights.yml
+├── dashboard/                   Interactive results dashboard (open index.html)
 │   ├── index.html
 │   └── app.jsx
-├── scripts/             ← ArcPy workflow scaffold (12 steps + helpers)
-│   ├── 00_env_setup.py
-│   ├── 01_prepare_study_area.py
-│   ├── ...
-│   ├── 11_export_maps.py
-│   ├── run_pipeline.py
-│   └── _helpers.py
-├── config/              ← Project configuration and AHP weights
-├── docs/                ← Methods, data sources, limitations
+├── data/
+│   ├── final/                   Primary analysis output
+│   │   ├── final_suitability.tif
+│   │   └── final_vectors.gdb/   Study area, peatlands, WDPA layers
+│   └── criteria_optional/       Eight reclassified input criterion rasters
+├── docs/                        Methods, data sources, limitations
 ├── outputs/
-│   ├── figures/         ← 12 thematic and suitability maps
-│   └── tables/          ← Weights, area statistics, metadata
-├── results/             ← Key findings summary
-├── data/                ← Input data placeholders and metadata
-└── arcgis-pro/          ← ArcGIS Pro project notes
+│   ├── figures/                 12 thematic and suitability maps
+│   └── tables/                  AHP weights, area statistics, figure manifest
+├── results/                     Key findings summary
+└── scripts/                     ArcPy workflow scaffold (12 steps + helpers)
+    ├── 00_env_setup.py … 11_export_maps.py
+    ├── run_pipeline.py
+    └── _helpers.py
 ```
 
 ## Reproducibility note
 
-The Python workflow in this repository is a structured ArcPy implementation of the project logic. The `config/project_config.json` uses example input paths and is intended as a template for adaptation. Users who wish to rerun or adapt the workflow should replace those paths with their own local datasets and confirm field names, schemas, and processing assumptions.
+The Python workflow in this repository is a structured ArcPy implementation of the project logic. The `config/project_config.json` uses example input paths and should be adapted to local dataset locations and field schema before reuse.
 
-This repository should be understood as a **public project showcase plus adaptable workflow template**, not as a fully plug-and-play rerun package.
+The criteria rasters in `data/criteria_optional/` are exported from the original ArcGIS Pro workflow at their native processing resolutions and are provided as visual reference exports. They were resampled to the common 30 m analysis grid within ArcGIS Pro before the weighted overlay was computed.
+
+This repository is a **public project showcase and adaptable workflow template**, not a plug-and-play rerun package.
 
 ## Publication status
 
@@ -107,15 +114,22 @@ This project is based on a study that has been accepted for publication but is n
 ## Limitations
 
 - The original analysis was developed in ArcGIS Pro through a GUI-led workflow and later translated into a structured ArcPy scaffold.
-- Some original source datasets are not redistributed directly in this repository.
-- The final suitability map is a screening product and should not be treated as final engineering approval or site investment advice.
-- Field validation, hydrological checks, geotechnical feasibility, land tenure review, and grid connection assessment are still required for implementation decisions.
+- Peat depth was approximated using a morphometric distance-from-edge proxy rather than direct depth measurements.
+- Some original source datasets are not redistributed in this repository due to size or licensing constraints.
+- The final suitability map is a screening product and should not be treated as engineering approval or investment advice.
+- Field validation, hydrological checks, geotechnical feasibility, land tenure review, and grid connection assessment are required before implementation decisions.
+
+## Citation
+
+A formal citation and DOI will be added after publication. In the meantime, to cite this repository:
+
+> Wisaksono, M. A. (2025). *Degraded Peatland Agrivoltaic Suitability* [Software]. GitHub. https://github.com/muaffanalfaiz/degraded-peatland-agrivoltaic-suitability
 
 ## Author
 
 **Muaffan Alfaiz Wisaksono**
 Precision Agriculture / GIS / Environmental Spatial Analysis
-Lincoln University
+Lincoln University, New Zealand
 
 ## License
 

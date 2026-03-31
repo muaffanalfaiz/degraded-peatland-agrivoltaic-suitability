@@ -4,7 +4,7 @@
   "projection_epsg": 32748,
   "cell_size": 30,
   "local_workspace": "scratch",
-  "final_public_tif": "data/rasters/final_suitability_30m.tif",
+  "final_public_tif": "data/final/final_suitability.tif",
   "preferred_aspect_degrees": 0,
   "class_breaks": [0.0, 0.25, 0.5, 0.75, 1.000001],
   "class_labels": {

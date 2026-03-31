@@ -1,29 +1,31 @@
-# Dashboard
+# Interactive Dashboard
 
-Interactive project dashboard for the degraded peatland agrivoltaic suitability analysis.
+A lightweight static dashboard for exploring the agrivoltaic suitability
+analysis results.
+
+## Files
+
+| File | Description |
+|------|-------------|
+| `index.html` | Main entry point — open in any modern browser |
+| `app.jsx` | React component source |
+
+## Usage
+
+Open `index.html` directly in a browser for a static preview of the
+suitability classification outputs and criterion weights.
+
+For local development with live reload, serve the folder with any static
+server, for example:
+
+```
+python -m http.server 8000
+```
+
+then navigate to `http://localhost:8000`.
 
 ## Contents
 
-- `app.jsx` — Standalone React component with three tabs: Overview, Criteria, and Maps
-
-## What it shows
-
-- Key result metrics (eligible domain, suitability percentages, AHP consistency)
-- Suitability class distribution (donut chart)
-- Peatland domain context and screening funnel
-- Analytical pipeline steps
-- AHP criterion weights (bar chart and radar profile)
-- Full criteria reference table with data sources
-- Switchable map explorer for all 12 thematic layers
-
-## How to preview
-
-**Option 1 — Claude.ai**: Copy the contents of `app.jsx` into a Claude.ai conversation and ask it to render the artifact.
-
-**Option 2 — Local React environment**: Drop `app.jsx` into any React project. The component requires `recharts` as a dependency. Map images are loaded from this repository via GitHub raw URLs.
-
-## Dependencies
-
-- React 18+
-- recharts
-- Google Fonts: DM Sans, JetBrains Mono (loaded via CDN)
+The dashboard presents a summary of the four-class suitability
+classification, AHP criterion weights, and area statistics derived from
+the GIS–MCDA analysis.

@@ -1,28 +1,41 @@
 # Limitations
 
-This repository should state limits honestly.
+## Screening scope
 
-## 1. Screening tool, not final site approval
-The final suitability map is a **first-pass screening product**. It is not a final engineering approval map.
+This analysis is a spatial screening tool, not a feasibility study. The
+suitability map identifies candidate zones based on available spatial data
+and does not account for site-level conditions that require ground
+verification.
 
-## 2. ArcGIS-first workflow
-The original analysis was completed in ArcGIS Pro through a GIS workflow. The Python scripts included here are reconstruction scaffolds and may not reproduce the original project instantly without path updates and cleaned inputs.
+## Data constraints
 
-## 3. Data sharing constraints
-Some source datasets or intermediates may not be redistributed directly through GitHub. This repository therefore focuses on:
-- methodology
-- exported outputs
-- metadata notes
-- selected shareable materials
+- **Peat depth** was approximated using a morphometric distance-from-edge
+  proxy rather than direct depth measurements. This introduces positional
+  uncertainty, particularly near peat margins.
+- **Flood vulnerability** is derived from a regional index layer; local
+  hydrological dynamics and seasonal variability are not captured.
+- **Fire hazard** uses FIRMS hotspot density as a proxy for fire risk.
+  Historical hotspot frequency reflects past conditions and may not
+  represent future fire probability under changing land management or
+  climate scenarios.
 
-## 4. Field validation still required
-Any real project development would still require:
-- geotechnical testing
-- water table monitoring
-- subsidence assessment
-- access audit
-- grid connection assessment
-- stakeholder and regulatory validation
+## Spatial coverage
 
-## 5. Terminology and versioning
-Because the project is accepted but not yet formally published, keep wording and figures aligned with the accepted version while avoiding publisher-formatted duplication until publication status is final.
+The analysis is constrained to the degraded peatland domain within South
+Sumatra as defined by the available KHG and land cover datasets. Areas
+outside this domain were not evaluated.
+
+## Criterion weights
+
+AHP weights reflect the judgment applied during this study. Sensitivity
+analysis was not formally conducted; users should treat the weighting scheme
+as one plausible configuration rather than a uniquely optimal solution.
+
+## What this analysis does not replace
+
+- Geotechnical and foundation feasibility assessment
+- Hydrological and subsidence risk modelling
+- Land tenure and concession verification
+- Grid connection and substation proximity analysis
+- Environmental impact assessment (AMDAL)
+- Community and stakeholder consultation

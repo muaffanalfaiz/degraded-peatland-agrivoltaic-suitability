@@ -1,11 +1,26 @@
-# ArcGIS Pro folder
+# ArcGIS Pro Project
 
-Place your **sanitized** ArcGIS Pro project here later.
+This folder contains the cleaned ArcGIS Pro project file for the degraded
+peatland agrivoltaic suitability analysis.
 
-Recommended:
-- rename your project to something clean, for example `project_clean.aprx`
-- remove local personal path references if possible
-- do not include massive `.gdb` folders unless intentionally public
-- do not include files with private institutional or account information
+## File
 
-If you are not ready to upload the `.aprx` yet, leave this folder as-is for the first public release.
+`agrivoltaic_suitability_clean.aprx` — presentation-ready project containing
+two maps:
+
+- **Final Suitability Map** — final suitability raster with study area
+  boundary, peatland extent, and protected area constraint layers.
+- **Criteria Map** — the eight reclassified input criteria used in the
+  weighted overlay, provided as an optional reference map.
+
+## Data dependencies
+
+Layers reference datasets in `../data/final/` and
+`../data/criteria_optional/`. If layers appear broken after cloning to a
+new machine, open the project in ArcGIS Pro and use the Repair Data Source
+tool, pointing each layer to the corresponding file in those folders.
+
+## Coordinate system
+
+Indonesian 1974 / UTM Zone 48S (EPSG:23888), 30 m cell size for the final
+suitability raster.

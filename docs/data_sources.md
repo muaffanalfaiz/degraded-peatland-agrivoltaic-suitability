@@ -34,7 +34,6 @@ It is meant for transparency and future metadata cleanup.
 ### 7. Protected areas / conservation exclusions
 - Source: WDPA and other constraint layers described in the manuscript
 
-## Recommended next step
 Create `data/metadata/data_inventory.csv` with columns:
 - layer_name
 - original_source

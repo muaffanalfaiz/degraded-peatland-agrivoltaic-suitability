@@ -21,7 +21,6 @@ Reported AHP consistency values from the manuscript:
 
 This CR is comfortably within acceptable consistency thresholds.
 
-## Public note
 If you later revise terminology, keep the wording consistent across:
 - README
 - docs

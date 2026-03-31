@@ -5,8 +5,8 @@ type: software
 authors:
   - family-names: "Wisaksono"
     given-names: "Muaffan Alfaiz"
-    affiliation: "Lincoln University"
-repository-code: "https://github.com/USERNAME/degraded-peatland-agrivoltaic-suitability"
+    affiliation: "Lincoln University, New Zealand"
+repository-code: "https://github.com/muaffanalfaiz/degraded-peatland-agrivoltaic-suitability"
 abstract: "GIS–MCDA-based land suitability analysis for agrivoltaic development on degraded peatlands in South Sumatra, Indonesia."
 keywords:
   - "GIS"

@@ -7,4 +7,4 @@ The repository is designed so the public GitHub version tracks:
 - code
 - docs
 - figures/tables
-- `data/rasters/final_suitability_30m.tif`
+- `data/final/final_suitability.tif`
