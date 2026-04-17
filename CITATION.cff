@@ -1,6 +1,6 @@
 cff-version: 1.2.0
+message: "If you use this repository, please cite the article below. If you use the repository materials directly, you may also cite the software record."
 title: "Degraded Peatland Agrivoltaic Suitability"
-message: "If you use this repository, please cite the project repository and later add the final journal citation after publication."
 type: software
 authors:
   - family-names: "Wisaksono"
@@ -16,3 +16,17 @@ keywords:
   - "peatland"
   - "South Sumatra"
 license: "MIT"
+
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Wisaksono"
+      given-names: "Muaffan Alfaiz"
+  title: "GIS–MCDA-based land suitability analysis for agrivoltaic development on degraded peatlands in South Sumatra"
+  journal: "Jurnal Lahan Suboptimal: Journal of Suboptimal Lands"
+  year: 2026
+  volume: 15
+  issue: 1
+  start: 7
+  end: 20
+  doi: "10.36706/jlso.15.1.2026.783"
